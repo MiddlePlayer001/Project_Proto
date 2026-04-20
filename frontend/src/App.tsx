@@ -96,44 +96,59 @@ export default function App() {
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Criar Novo Produto</h2>
             <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-              <input
-                type="text"
-                placeholder="Código"
-                value={formData.codigo}
-                onChange={(e) => setFormData({ ...formData, codigo: e.target.value })}
-                className="col-span-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Nome"
-                value={formData.nome}
-                onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                className="col-span-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-              <input
-                type="number"
-                placeholder="Preço de Custo"
-                value={formData.preco_custo}
-                onChange={(e) => setFormData({ ...formData, preco_custo: parseFloat(e.target.value) })}
-                className="col-span-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-              <input
-                type="number"
-                placeholder="Preço de Venda"
-                value={formData.preco_venda}
-                onChange={(e) => setFormData({ ...formData, preco_venda: parseFloat(e.target.value) })}
-                className="col-span-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-              <textarea
-                placeholder="Descrição"
-                value={formData.descricao}
-                onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
-                className="col-span-2 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <div className="col-span-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Código do Produto</label>
+                <input
+                  type="text"
+                  placeholder="Ex: PROD001"
+                  value={formData.codigo}
+                  onChange={(e) => setFormData({ ...formData, codigo: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div className="col-span-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Nome do Produto</label>
+                <input
+                  type="text"
+                  placeholder="Ex: Camiseta Azul"
+                  value={formData.nome}
+                  onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div className="col-span-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Preço de Custo (R$)</label>
+                <input
+                  type="number"
+                  placeholder="Ex: 100.00"
+                  value={formData.preco_custo}
+                  onChange={(e) => setFormData({ ...formData, preco_custo: parseFloat(e.target.value) })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div className="col-span-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Preço de Venda (R$)</label>
+                <input
+                  type="number"
+                  placeholder="Ex: 150.00"
+                  value={formData.preco_venda}
+                  onChange={(e) => setFormData({ ...formData, preco_venda: parseFloat(e.target.value) })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Descrição (opcional)</label>
+                <textarea
+                  placeholder="Ex: Produto de alta qualidade, cor azul..."
+                  value={formData.descricao}
+                  onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
               <div className="col-span-2 flex gap-2">
                 <button
                   type="submit"
