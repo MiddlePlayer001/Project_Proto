@@ -3,7 +3,7 @@ import { Layout } from './components/Layout'
 import { produtoService } from './services/api'
 import { Plus, Trash2, DollarSign, TrendingUp } from 'lucide-react'
 
-type PageType = 'produtos' | 'vendas' | 'financeiro'
+type PageType = 'produtos' | 'vendas' | 'financeiro' | 'dashboard'
 
 interface Produto {
   id: number
@@ -34,7 +34,7 @@ interface Financeiro {
 }
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<PageType>('produtos')
+  const [currentPage, setCurrentPage] = useState<PageType>('dashboard')
   const [produtos, setProdutos] = useState<Produto[]>([])
   const [vendas, setVendas] = useState<Venda[]>([])
   const [financeiro, setFinanceiro] = useState<Financeiro[]>([])
@@ -179,35 +179,39 @@ export default function App() {
   const totalVendas = vendas.reduce((sum, v) => sum + v.total, 0)
 
   return (
-    <Layout>
-      <div className="space-y-6">
+    <Layout currentPage={currentPage} onPageChange={setCurrentPage}>
+      <div className="space-y-6 pb-32">
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">
+              {currentPage === 'dashboard' && 'Dashboard'}
               {currentPage === 'produtos' && 'Produtos'}
               {currentPage === 'vendas' && 'Vendas'}
               {currentPage === 'financeiro' && 'Financeiro'}
             </h1>
             <p className="text-gray-600 mt-1">
+              {currentPage === 'dashboard' && 'Visão geral do sistema'}
               {currentPage === 'produtos' && 'Gerenciamento de produtos em estoque'}
               {currentPage === 'vendas' && 'Registro de vendas e transações'}
               {currentPage === 'financeiro' && 'Controle financeiro e fluxo de caixa'}
             </p>
           </div>
-          <button
-            onClick={() => {
-              if (currentPage === 'produtos') setShowProdutoForm(!showProdutoForm)
-              else if (currentPage === 'vendas') setShowVendaForm(!showVendaForm)
-              else if (currentPage === 'financeiro') setShowFinanceiroForm(!showFinanceiroForm)
-            }}
-            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-          >
-            <Plus size={20} />
-            {currentPage === 'produtos' && 'Novo Produto'}
-            {currentPage === 'vendas' && 'Nova Venda'}
-            {currentPage === 'financeiro' && 'Novo Movimento'}
-          </button>
+          {currentPage !== 'dashboard' && (
+            <button
+              onClick={() => {
+                if (currentPage === 'produtos') setShowProdutoForm(!showProdutoForm)
+                else if (currentPage === 'vendas') setShowVendaForm(!showVendaForm)
+                else if (currentPage === 'financeiro') setShowFinanceiroForm(!showFinanceiroForm)
+              }}
+              className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            >
+              <Plus size={20} />
+              {currentPage === 'produtos' && 'Novo Produto'}
+              {currentPage === 'vendas' && 'Nova Venda'}
+              {currentPage === 'financeiro' && 'Novo Movimento'}
+            </button>
+          )}
         </div>
 
         {/* ===== PRODUTOS ===== */}
@@ -560,40 +564,27 @@ export default function App() {
             </div>
           </>
         )}
-      </div>
 
-      {/* Navigation Buttons */}
-      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2">
-        <button
-          onClick={() => setCurrentPage('produtos')}
-          className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-            currentPage === 'produtos'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-          }`}
-        >
-          Produtos
-        </button>
-        <button
-          onClick={() => setCurrentPage('vendas')}
-          className={`px-4 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2 ${
-            currentPage === 'vendas'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-          }`}
-        >
-          <TrendingUp size={18} /> Vendas
-        </button>
-        <button
-          onClick={() => setCurrentPage('financeiro')}
-          className={`px-4 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2 ${
-            currentPage === 'financeiro'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-          }`}
-        >
-          <DollarSign size={18} /> Financeiro
-        </button>
+        {/* DASHBOARD */}
+        {currentPage === 'dashboard' && (
+          <div className="grid grid-cols-3 gap-6">
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-sm text-gray-600">Total de Produtos</p>
+              <p className="text-4xl font-bold text-blue-600 mt-2">{produtos.length}</p>
+            </div>
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-sm text-gray-600">Total de Vendas</p>
+              <p className="text-4xl font-bold text-green-600 mt-2">{vendas.length}</p>
+              <p className="text-sm text-gray-500 mt-2">R$ {vendas.reduce((sum, v) => sum + v.total, 0).toFixed(2)}</p>
+            </div>
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-sm text-gray-600">Saldo Financeiro</p>
+              <p className={`text-4xl font-bold mt-2 ${saldoTotal >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
+                R$ {saldoTotal.toFixed(2)}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   )

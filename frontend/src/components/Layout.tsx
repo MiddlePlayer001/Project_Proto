@@ -4,17 +4,24 @@ import { useState } from 'react'
 
 interface LayoutProps {
   children: ReactNode
+  currentPage?: 'produtos' | 'vendas' | 'financeiro' | 'dashboard'
+  onPageChange?: (page: 'produtos' | 'vendas' | 'financeiro' | 'dashboard') => void
 }
 
-export function Layout({ children }: LayoutProps) {
+export function Layout({ children, currentPage = 'dashboard', onPageChange }: LayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const menuItems = [
-    { icon: BarChart3, label: 'Dashboard', href: '/' },
-    { icon: Package, label: 'Produtos', href: '/produtos' },
-    { icon: BarChart3, label: 'Vendas', href: '/vendas' },
-    { icon: DollarSign, label: 'Financeiro', href: '/financeiro' },
-  ]
+    { icon: BarChart3, label: 'Dashboard', page: 'dashboard' },
+    { icon: Package, label: 'Produtos', page: 'produtos' },
+    { icon: BarChart3, label: 'Vendas', page: 'vendas' },
+    { icon: DollarSign, label: 'Financeiro', page: 'financeiro' },
+  ] as const
+
+  const handleMenuClick = (page: typeof menuItems[number]['page']) => {
+    onPageChange?.(page)
+    setIsMenuOpen(false)
+  }
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -25,20 +32,24 @@ export function Layout({ children }: LayoutProps) {
         <div className="p-6 border-b border-gray-800">
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Package size={28} />
-            EstoqueApp
+            Proto_Gestor
           </h1>
         </div>
 
         <nav className="mt-8">
           {menuItems.map((item) => (
-            <a
+            <button
               key={item.label}
-              href={item.href}
-              className="flex items-center gap-3 px-6 py-3 hover:bg-gray-800 transition-colors"
+              onClick={() => handleMenuClick(item.page)}
+              className={`w-full text-left flex items-center gap-3 px-6 py-3 transition-colors ${
+                currentPage === item.page
+                  ? 'bg-blue-600 border-l-4 border-blue-400'
+                  : 'hover:bg-gray-800'
+              }`}
             >
               <item.icon size={20} />
               {item.label}
-            </a>
+            </button>
           ))}
         </nav>
 
